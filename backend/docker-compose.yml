@@ -1,42 +1,17 @@
 services:
-  mongo:
-    image: mongo:7
-    container_name: g-scores-mongo
-    restart: unless-stopped
-    volumes:
-      - mongo-data:/data/db
-    ports:
-      - "27017:27017"
-    healthcheck:
-      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 20s
-
   backend:
     build: .
     container_name: g-scores-backend
     restart: unless-stopped
+    env_file:
+      - .env
     environment:
       PORT: 3000
-      MONGODB_URI: mongodb://mongo:27017/golden-owl
     ports:
       - "3000:3000"
-    depends_on:
-      mongo:
-        condition: service_healthy
-
-  # One-off data import: `docker compose run --rm seed`
   seed:
     build: .
     profiles: ["seed"]
     command: ["node", "config/seed.js"]
-    environment:
-      MONGODB_URI: mongodb://mongo:27017/golden-owl
-    depends_on:
-      mongo:
-        condition: service_healthy
-
-volumes:
-  mongo-data:
+    env_file:
+      - .env
