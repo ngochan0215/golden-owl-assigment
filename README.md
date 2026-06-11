@@ -46,7 +46,7 @@ g-scores/
 ### 1. Clone the repository
 
 ```bash
-git clone <your-repo-url>
+git clone <https://github.com/ngochan0215/golden-owl-assigment.git>
 cd golden-owl
 ```
 
@@ -55,15 +55,9 @@ cd golden-owl
 ```bash
 cd backend
 npm install
-
-# Create your .env file
-cp .env.example .env
+# Create your .env file by asking the owner for it
 ```
 
-Edit `.env`:
-```env
-PORT=5000
-MONGODB_URI=mongodb://localhost:27017/golden_owl
 ```
 
 ### 3. Seed the database
@@ -76,12 +70,12 @@ npm run seed
 
 You should see output like:
 ```
-✅ MongoDB connected: localhost
-📂 Đọc CSV từ: .../dataset/diem_thi_thpt_2024.csv
-⏳ Đang seed dữ liệu...
-  ✔ Batch 1: 1000 dòng đã xử lý
-  ...
-✅ Seed xong — XXXXXX thí sinh đã được import vào MongoDB
+MongoDB connected: localhost
+Đọc CSV từ: .../dataset/diem_thi_thpt_2024.csv
+Đang seed dữ liệu...
+✔ Batch 1: 1000 dòng đã xử lý
+...
+Seed xong — XXXXXX thí sinh đã được import vào MongoDB
 ```
 
 ### 4. Start the backend
@@ -109,21 +103,11 @@ npm run dev
 Make sure Docker Desktop is running, then from the project root:
 
 ```bash
-docker compose up --build
+docker compose up --build -d
+docker compose run --rm seed
 ```
 
-This will spin up 3 containers:
-- `g-scores-mongo` — MongoDB on port 27017
-- `g-scores-api` — Express backend on port 5000
-- `g-scores-seeder` — runs once to import the CSV, then exits
-
-Frontend is not containerised — run it separately:
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
+Frontend is not containerised — run it separately like the above instruction
 
 ---
 
