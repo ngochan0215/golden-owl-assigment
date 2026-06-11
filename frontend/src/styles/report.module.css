@@ -1,0 +1,106 @@
+.page {
+    padding: 3rem 1rem;
+}
+.container {
+    max-width: 920px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    animation: fadeInUp .4s ease both;
+}
+.title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: -0.6px;
+    background: var(--grad-brand);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+.subtitle {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin-top: 0.3rem;
+}
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 50vh;
+    color: var(--text-muted);
+    font-size: 1rem;
+}
+
+.card {
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    padding: 1.75rem;
+    overflow: hidden;
+}
+
+.tableTitle {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+}
+.tableTitle::before {
+    content: '';
+    width: 6px;
+    height: 1.1rem;
+    border-radius: 3px;
+    background: var(--grad-brand);
+}
+
+.tableWrapper {
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.table th, .table td {
+    padding: 0.7rem 1rem;
+    text-align: right;
+    border-bottom: 1px solid var(--border);
+}
+
+.table th:first-child,
+.table td:first-child {
+    text-align: left;
+    font-weight: 600;
+}
+
+.table thead th {
+    font-weight: 700;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    background: var(--surface-2);
+    position: sticky;
+    top: 0;
+}
+.table thead th:first-child { border-top-left-radius: 10px; }
+.table thead th:last-child  { border-top-right-radius: 10px; }
+
+.table tbody tr {
+    transition: background .12s ease;
+}
+.table tbody tr:nth-child(even) td { background: rgba(248,250,252,.6); }
+.table tbody tr:last-child td { border-bottom: none; }
+.table tbody tr:hover td { background: var(--grad-brand-soft); }
+
+@media (max-width: 480px) {
+    .title { font-size: 1.45rem; }
+    .card { padding: 1.1rem; }
+}
