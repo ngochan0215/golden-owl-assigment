@@ -2,6 +2,7 @@ import { useReport } from '../hooks/useReport.js';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid,
   Tooltip, Legend, ResponsiveContainer,
+  PieChart, Pie, Cell,
 } from 'recharts';
 import styles from '../styles/report.module.css';
 
@@ -19,10 +20,19 @@ const BAND_LABELS = {
   poor: '< 4',
 };
 
+const BAND_NAMES = {
+  excellent: 'Giỏi',
+  good: 'Khá',
+  average: 'Trung bình',
+  poor: 'Cần cố gắng',
+};
+
+const BANDS = ['excellent', 'good', 'average', 'poor'];
+
 export default function Report() {
     const { data, loading, error } = useReport();
 
-    if (loading) return <div className={styles.center}>Đang tải dữ liệu...</div>;
+    if (loading) return <div className={styles.center}><span className={styles.spinner} />Đang tải dữ liệu...</div>;
     if (error) return <div className={styles.center}>Lỗi: {error}</div>;
     if (!data) return null;
 
@@ -34,36 +44,91 @@ export default function Report() {
         '< 4': d.poor,
     }));
 
+    // Aggregate totals across every subject for each band
+    const totals = BANDS.reduce((acc, band) => {
+        acc[band] = data.distribution.reduce((sum, d) => sum + d[band], 0);
+        return acc;
+    }, {});
+    const grandTotal = BANDS.reduce((sum, b) => sum + totals[b], 0);
+
+    const pieData = BANDS.map(band => ({
+        name: BAND_NAMES[band],
+        value: totals[band],
+        color: BAND_COLORS[band],
+    }));
+
     return (
         <main className={styles.page}>
             <div className={styles.container}>
-                <h1 className={styles.title}>Thống kê phân bổ điểm thi</h1>
-                <p className={styles.subtitle}>Số thí sinh theo 4 mức điểm, phân theo môn thi</p>
+                <header>
+                    <h1 className={styles.title}>Thống kê phân bổ điểm thi</h1>
+                    <p className={styles.subtitle}>Số lượt điểm theo 4 mức, phân theo môn thi</p>
+                </header>
 
-                <div className={styles.card}>
-                    <ResponsiveContainer width="100%" height={420}>
-                        <BarChart data={chartData} margin={{ top: 10, right: 20, left: 10, bottom: 60 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                        <XAxis
-                            dataKey="name"
-                            tick={{ fontSize: 12, fill: '#64748b' }}
-                            angle={-35}
-                            textAnchor="end"
-                            interval={0}
-                        />
-                        <YAxis tick={{ fontSize: 12, fill: '#64748b' }} width={70} />
-                        <Tooltip
-                            formatter={(value, name) => [value.toLocaleString('vi-VN'), name]}
-                        />
-                        <Legend verticalAlign="top" height={36} />
-                        {Object.entries(BAND_COLORS).map(([band, color]) => (
-                            <Bar key={band} dataKey={BAND_LABELS[band]} fill={color} radius={[3,3,0,0]} />
-                        ))}
-                        </BarChart>
-                    </ResponsiveContainer>
+                {/* Summary stat cards */}
+                <div className={styles.statRow}>
+                    {BANDS.map(band => {
+                        const pct = grandTotal ? (totals[band] / grandTotal) * 100 : 0;
+                        return (
+                            <div key={band} className={styles.statCard} style={{ '--c': BAND_COLORS[band] }}>
+                                <span className={styles.statName}>{BAND_NAMES[band]}</span>
+                                <span className={styles.statValue}>{totals[band].toLocaleString('vi-VN')}</span>
+                                <span className={styles.statMeta}>{BAND_LABELS[band]} · {pct.toFixed(1)}%</span>
+                            </div>
+                        );
+                    })}
                 </div>
 
-                {/* Bảng số liệu chi tiết */}
+                {/* Donut + bar side by side */}
+                <div className={styles.grid}>
+                    <div className={styles.card}>
+                        <h2 className={styles.tableTitle}>Tỉ lệ theo mức điểm</h2>
+                        <ResponsiveContainer width="100%" height={300}>
+                            <PieChart>
+                                <Pie
+                                    data={pieData}
+                                    dataKey="value"
+                                    nameKey="name"
+                                    innerRadius={62}
+                                    outerRadius={100}
+                                    paddingAngle={2}
+                                    stroke="none"
+                                >
+                                    {pieData.map(entry => <Cell key={entry.name} fill={entry.color} />)}
+                                </Pie>
+                                <Tooltip formatter={(v, n) => [v.toLocaleString('vi-VN'), n]} />
+                                <Legend verticalAlign="bottom" height={24} iconType="circle" />
+                            </PieChart>
+                        </ResponsiveContainer>
+                    </div>
+
+                    <div className={styles.card}>
+                        <h2 className={styles.tableTitle}>So sánh giữa các môn</h2>
+                        <ResponsiveContainer width="100%" height={300}>
+                            <BarChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 60 }}>
+                                <CartesianGrid strokeDasharray="3 3" stroke="#eef2f7" vertical={false} />
+                                <XAxis
+                                    dataKey="name"
+                                    tick={{ fontSize: 11, fill: '#64748b' }}
+                                    angle={-35}
+                                    textAnchor="end"
+                                    interval={0}
+                                />
+                                <YAxis tick={{ fontSize: 11, fill: '#64748b' }} width={56} />
+                                <Tooltip
+                                    cursor={{ fill: 'rgba(79,70,229,.05)' }}
+                                    formatter={(value, name) => [value.toLocaleString('vi-VN'), name]}
+                                />
+                                <Legend verticalAlign="top" height={32} iconType="circle" />
+                                {BANDS.map(band => (
+                                    <Bar key={band} dataKey={BAND_LABELS[band]} fill={BAND_COLORS[band]} radius={[3,3,0,0]} />
+                                ))}
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </div>
+                </div>
+
+                {/* Detailed data table */}
                 <div className={styles.card}>
                     <h2 className={styles.tableTitle}>Chi tiết số liệu</h2>
                     <div className={styles.tableWrapper}>

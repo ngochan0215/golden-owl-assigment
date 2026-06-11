@@ -4,10 +4,10 @@
   justify-content: space-between;
   padding: 0 2rem;
   height: 66px;
-  background: rgba(255, 255, 255, 0.75);
+  background: var(--nav-bg);
   backdrop-filter: saturate(180%) blur(14px);
   -webkit-backdrop-filter: saturate(180%) blur(14px);
-  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+  border-bottom: 1px solid var(--nav-border);
   box-shadow: 0 1px 0 rgba(15, 23, 42, 0.02), var(--shadow);
   position: sticky;
   top: 0;
@@ -41,6 +41,12 @@
   color: transparent;
 }
 
+.right {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
 .links {
   display: flex;
   gap: 0.35rem;
@@ -69,10 +75,112 @@
   box-shadow: 0 6px 16px -6px rgba(79, 70, 229, 0.6);
 }
 
+/* Settings */
+.settings {
+  position: relative;
+}
+
+.gear {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text-muted);
+  transition: color .18s ease, background .18s ease, border-color .18s ease, transform .4s ease;
+}
+.gear:hover {
+  color: var(--primary);
+  border-color: var(--primary-light);
+  background: var(--grad-brand-soft);
+}
+.gearOpen {
+  color: var(--primary);
+  border-color: var(--primary-light);
+  transform: rotate(60deg);
+}
+
+.menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 248px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: var(--shadow-lg);
+  padding: 0.5rem;
+  z-index: 200;
+  transform-origin: top right;
+  animation: menuIn .16s ease both;
+}
+@keyframes menuIn {
+  from { opacity: 0; transform: translateY(-6px) scale(.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.menuHeader {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text-muted);
+  padding: 0.4rem 0.6rem 0.5rem;
+}
+
+.menuRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.55rem 0.6rem;
+  border-radius: 10px;
+}
+.menuRow:hover { background: var(--surface-2); }
+
+.menuLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--text);
+}
+.menuIcon { font-size: 1.05rem; }
+
+/* Toggle switch */
+.switch {
+  position: relative;
+  width: 46px;
+  height: 26px;
+  flex-shrink: 0;
+  border: none;
+  border-radius: 999px;
+  background: var(--track);
+  transition: background .2s ease;
+}
+.switchOn { background: var(--grad-brand); }
+
+.knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,.3);
+  transition: transform .2s cubic-bezier(.4,0,.2,1);
+}
+.switchOn .knob { transform: translateX(20px); }
+
 /* Responsive */
 @media (max-width: 480px) {
   .navbar { padding: 0 1rem; height: 60px; }
   .brandText { font-size: 1.05rem; }
   .logo { width: 32px; height: 32px; font-size: 1rem; }
   .links a { padding: 0.4rem 0.7rem; font-size: 0.875rem; }
+  .gear { width: 34px; height: 34px; }
 }

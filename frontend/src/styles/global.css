@@ -32,6 +32,43 @@
   --shadow-md:    0 4px 6px -1px rgba(15,23,42,.06), 0 10px 25px -5px rgba(15,23,42,.10);
   --shadow-lg:    0 20px 40px -12px rgba(79,70,229,.20), 0 8px 16px -8px rgba(15,23,42,.12);
   --ring:         0 0 0 4px rgba(79,70,229,.15);
+
+  /* Decorative background blobs (overridable in dark) */
+  --blob-1:       rgba(6,182,212,.14);
+  --blob-2:       rgba(79,70,229,.16);
+
+  /* Navbar glass */
+  --nav-bg:       rgba(255,255,255,.75);
+  --nav-border:   rgba(226,232,240,.8);
+  --track:        #e6eaf1;
+}
+
+:root[data-theme="dark"] {
+  --primary:      #818cf8;
+  --primary-dark: #6366f1;
+  --primary-light:#a5b4fc;
+  --accent:       #22d3ee;
+
+  --bg:           #0b1120;
+  --surface:      #161e2e;
+  --surface-2:    #1e293b;
+  --border:       #2c3a4f;
+  --text:         #e6edf6;
+  --text-muted:   #94a3b8;
+
+  --grad-brand-soft: linear-gradient(135deg, rgba(99,102,241,.20) 0%, rgba(6,182,212,.14) 100%);
+
+  --shadow:       0 1px 2px rgba(0,0,0,.4), 0 1px 3px rgba(0,0,0,.5);
+  --shadow-md:    0 4px 6px -1px rgba(0,0,0,.4), 0 10px 25px -5px rgba(0,0,0,.55);
+  --shadow-lg:    0 20px 40px -12px rgba(0,0,0,.65), 0 8px 16px -8px rgba(0,0,0,.5);
+  --ring:         0 0 0 4px rgba(129,140,248,.22);
+
+  --blob-1:       rgba(6,182,212,.16);
+  --blob-2:       rgba(99,102,241,.20);
+
+  --nav-bg:       rgba(18,25,38,.72);
+  --nav-border:   rgba(44,58,79,.8);
+  --track:        #2c3a4f;
 }
 
 html { scroll-behavior: smooth; }
@@ -43,11 +80,12 @@ body {
   min-height: 100vh;
   background-color: var(--bg);
   background-image:
-    radial-gradient(1100px 520px at 85% -8%, rgba(6,182,212,.14), transparent 60%),
-    radial-gradient(900px 500px at 0% 0%, rgba(79,70,229,.16), transparent 55%);
+    radial-gradient(1100px 520px at 85% -8%, var(--blob-1), transparent 60%),
+    radial-gradient(900px 500px at 0% 0%, var(--blob-2), transparent 55%);
   background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  transition: background-color .3s ease, color .3s ease;
 }
 
 a {

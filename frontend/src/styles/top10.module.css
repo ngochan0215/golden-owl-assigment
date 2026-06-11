@@ -2,7 +2,7 @@
     padding: 3rem 1rem;
 }
 .container {
-    max-width: 760px;
+    max-width: 840px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -27,9 +27,105 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 0.7rem;
     min-height: 50vh;
     color: var(--text-muted);
     font-size: 1rem;
+}
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 3px solid var(--border);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Podium */
+.podium {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    align-items: end;
+    gap: 1rem;
+}
+.podiumCard {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.15rem;
+    padding: 1.25rem 1rem 1.4rem;
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    transition: transform .18s ease, box-shadow .18s ease;
+}
+.podiumCard::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 5px;
+}
+.podiumCard:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+
+.p1 { padding-top: 1.75rem; padding-bottom: 1.9rem; border-color: rgba(245,158,11,.4); background: linear-gradient(180deg, #fffbeb, #ffffff); }
+.p1::before { background: linear-gradient(90deg, #fbbf24, #f59e0b); }
+.p2::before { background: linear-gradient(90deg, #cbd5e1, #94a3b8); }
+.p3::before { background: linear-gradient(90deg, #fbcfa4, #d97706); }
+
+.podiumMedal { font-size: 2.2rem; line-height: 1; }
+.p1 .podiumMedal { font-size: 2.7rem; }
+.podiumRank {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+}
+.podiumSbd {
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+.podiumTotal {
+    font-size: 1.7rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    background: var(--grad-brand);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-top: 0.2rem;
+    line-height: 1.1;
+}
+.p1 .podiumTotal { font-size: 2rem; }
+.podiumLabel {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.chartTitle {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    padding: 0 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+}
+.chartTitle::before {
+    content: '';
+    width: 6px;
+    height: 1.1rem;
+    border-radius: 3px;
+    background: var(--grad-brand);
 }
 
 .card {
@@ -103,6 +199,10 @@
     color: var(--primary);
 }
 
+@media (max-width: 560px) {
+    .podium { grid-template-columns: 1fr; }
+    .p1 { order: -1; padding-top: 1.25rem; padding-bottom: 1.4rem; }
+}
 @media (max-width: 480px) {
     .title { font-size: 1.45rem; }
     .table th, .table td { padding: 0.6rem 0.5rem; font-size: 0.85rem; }
