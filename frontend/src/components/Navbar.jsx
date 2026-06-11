@@ -3,18 +3,27 @@ import { NavLink } from 'react-router-dom';
 import { useTheme } from '../hooks/useTheme.js';
 import styles from '../styles/navbar.module.css';
 
+const NAV_ITEMS = [
+  { to: '/', label: 'Tra cứu', end: true },
+  { to: '/report', label: 'Thống kê' },
+  { to: '/top10', label: 'Top 10' },
+];
+
 export default function Navbar() {
   const { theme, toggleTheme } = useTheme();
-  const [open, setOpen] = useState(false);
-  const menuRef = useRef(null);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [navOpen, setNavOpen] = useState(false);
+  const settingsRef = useRef(null);
+  const navRef = useRef(null);
 
   useEffect(() => {
-    if (!open) return;
+    if (!settingsOpen && !navOpen) return;
     function onClick(e) {
-      if (menuRef.current && !menuRef.current.contains(e.target)) setOpen(false);
+      if (settingsOpen && settingsRef.current && !settingsRef.current.contains(e.target)) setSettingsOpen(false);
+      if (navOpen && navRef.current && !navRef.current.contains(e.target)) setNavOpen(false);
     }
     function onKey(e) {
-      if (e.key === 'Escape') setOpen(false);
+      if (e.key === 'Escape') { setSettingsOpen(false); setNavOpen(false); }
     }
     document.addEventListener('mousedown', onClick);
     document.addEventListener('keydown', onKey);
@@ -22,7 +31,7 @@ export default function Navbar() {
       document.removeEventListener('mousedown', onClick);
       document.removeEventListener('keydown', onKey);
     };
-  }, [open]);
+  }, [settingsOpen, navOpen]);
 
   const isDark = theme === 'dark';
 
@@ -34,32 +43,42 @@ export default function Navbar() {
       </NavLink>
 
       <div className={styles.right}>
-        <ul className={styles.links}>
-          <li>
-            <NavLink to="/" className={({ isActive }) => isActive ? styles.active : ''} end>
-              Tra cứu
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/report" className={({ isActive }) => isActive ? styles.active : ''}>
-              Thống kê
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/top10" className={({ isActive }) => isActive ? styles.active : ''}>
-              Top 10
-            </NavLink>
-          </li>
-        </ul>
-
-        <div className={styles.settings} ref={menuRef}>
+        <div className={styles.navGroup} ref={navRef}>
           <button
             type="button"
-            className={`${styles.gear} ${open ? styles.gearOpen : ''}`}
-            onClick={() => setOpen(o => !o)}
+            className={`${styles.hamburger} ${navOpen ? styles.hamburgerOpen : ''}`}
+            onClick={() => setNavOpen(o => !o)}
+            aria-label="Menu"
+            aria-haspopup="true"
+            aria-expanded={navOpen}
+          >
+            <span /><span /><span />
+          </button>
+
+          <ul className={`${styles.links} ${navOpen ? styles.linksOpen : ''}`}>
+            {NAV_ITEMS.map(item => (
+              <li key={item.to}>
+                <NavLink
+                  to={item.to}
+                  end={item.end}
+                  className={({ isActive }) => isActive ? styles.active : ''}
+                  onClick={() => setNavOpen(false)}
+                >
+                  {item.label}
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className={styles.settings} ref={settingsRef}>
+          <button
+            type="button"
+            className={`${styles.gear} ${settingsOpen ? styles.gearOpen : ''}`}
+            onClick={() => setSettingsOpen(o => !o)}
             aria-label="Cài đặt"
             aria-haspopup="true"
-            aria-expanded={open}
+            aria-expanded={settingsOpen}
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                  strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -68,7 +87,7 @@ export default function Navbar() {
             </svg>
           </button>
 
-          {open && (
+          {settingsOpen && (
             <div className={styles.menu} role="menu">
               <div className={styles.menuHeader}>Cài đặt</div>
 
