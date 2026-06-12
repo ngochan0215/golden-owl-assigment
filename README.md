@@ -2,7 +2,7 @@
 
 A web application to look up and analyse 2024 Vietnamese High School Graduation Exam (THPT) scores.
 
-🔗 **Demo:** _coming soon_
+🔗 **Demo:** https://golden-owl-assigment.vercel.app/
 
 ---
 
